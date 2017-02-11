@@ -1,34 +1,51 @@
 package br.com.matheush.appsqlite;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.Application;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+import static android.os.Build.VERSION_CODES.M;
+import static android.provider.Contacts.SettingsColumns.KEY;
 
-
+public class MainActivity extends AppCompatActivity implements Validator.ValidationListener{
+    @NotEmpty(message = MyApplication.MSG_VAZIO)
     @BindView(R.id.etNome)
-    EditText etNome;
+    private EditText etNome;
+    @NotEmpty(message = MyApplication.MSG_VAZIO)
     @BindView(R.id.etFone)
-    EditText etFone;
+    private EditText etFone;
+    @Email(message = MyApplication.MSG_INVALIDO)
     @BindView(R.id.etEmail)
-    EditText etEmail;
+    private EditText etEmail;
     @BindView(R.id.btEnviar)
-    Button btEnviar;
+    private Button btEnviar;
+
+    private Validator validator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        validator = new Validator(this);
+        validator.setValidationListener(this);
 
         /*try {
             SQLiteDatabase bancoDados = openOrCreateDatabase("MeuApp", MODE_PRIVATE, null);
@@ -64,5 +81,26 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btEnviar)
     public void onClick() {
+        validator.validate();
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        Log.d("LogX", "Passou no teste");
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

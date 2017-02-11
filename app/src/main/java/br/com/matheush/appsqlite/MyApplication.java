@@ -9,6 +9,9 @@ import com.activeandroid.ActiveAndroid;
  */
 
 public class MyApplication extends Application {
+    public static final String MSG_VAZIO = "Favor preencher";
+    public static final String MSG_INVALIDO = "Favor digitar um valor válido";
+
     @Override
     public void onCreate() {
         super.onCreate();
