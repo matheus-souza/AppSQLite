@@ -1,13 +1,26 @@
 package br.com.matheush.appsqlite.model;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+import static android.R.attr.id;
+import static android.R.attr.name;
+import static android.R.attr.x;
+
 /**
  * Created by matheush on 08/02/17.
  */
 
-public class Pessoa {
-    private long id;
+@Table(name = "Pessoa", id = "id")
+public class Pessoa extends Model {
+    @Column(name = "pessoa_id", unique = true, index = true, onUniqueConflicts = Column.ConflictAction.REPLACE)
+    private long idPessoa;
+    @Column(name = "pessoa_nome")
     private String nome;
+    @Column(name = "pessoa_numero_celular")
     private long numeroCelular;
+    @Column(name = "pessoa_email")
     private String email;
 
     public Pessoa() {
@@ -19,12 +32,12 @@ public class Pessoa {
         this.email = email;
     }
 
-    public long getId() {
-        return id;
+    public long getIdPessoa() {
+        return idPessoa;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setIdPessoa(long idPessoa) {
+        this.idPessoa = idPessoa;
     }
 
     public String getNome() {
@@ -55,10 +68,11 @@ public class Pessoa {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Pessoa pessoa = (Pessoa) o;
 
-        if (id != pessoa.id) return false;
+        if (idPessoa != pessoa.idPessoa) return false;
         if (numeroCelular != pessoa.numeroCelular) return false;
         if (nome != null ? !nome.equals(pessoa.nome) : pessoa.nome != null) return false;
         return email != null ? email.equals(pessoa.email) : pessoa.email == null;
@@ -67,7 +81,8 @@ public class Pessoa {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
+        result = 31 * result + (int) (idPessoa ^ (idPessoa >>> 32));
         result = 31 * result + (nome != null ? nome.hashCode() : 0);
         result = 31 * result + (int) (numeroCelular ^ (numeroCelular >>> 32));
         result = 31 * result + (email != null ? email.hashCode() : 0);
@@ -77,7 +92,7 @@ public class Pessoa {
     @Override
     public String toString() {
         return "Pessoa{" +
-                "id=" + id +
+                "idPessoa=" + idPessoa +
                 ", nome='" + nome + '\'' +
                 ", numeroCelular=" + numeroCelular +
                 ", email='" + email + '\'' +
