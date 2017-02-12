@@ -1,6 +1,10 @@
 package br.com.matheush.appsqlite.dao;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.matheush.appsqlite.model.Pessoa;
 
@@ -11,12 +15,19 @@ import br.com.matheush.appsqlite.model.Pessoa;
 public class PessoaDao implements IDao<Pessoa> {
     @Override
     public void salva(Pessoa pessoa) {
-
+        new Pessoa(pessoa.getNome(),
+                pessoa.getNumeroCelular(),
+                pessoa.getEmail()).save();
     }
 
     @Override
     public void deleta(int id) {
+        Pessoa.delete(Pessoa.class, id);
+    }
 
+    @Override
+    public void detetaTodos() {
+        new Delete().from(Pessoa.class).execute();
     }
 
     @Override
@@ -25,12 +36,12 @@ public class PessoaDao implements IDao<Pessoa> {
     }
 
     @Override
-    public ArrayList<Pessoa> getObejetos() {
-        return null;
+    public List<Pessoa> getObejetos() {
+        return new Select().from(Pessoa.class).orderBy("id ASC").execute();
     }
 
     @Override
     public Pessoa getObejeto(int id) {
-        return null;
+        return new Select().from(Pessoa.class).where("id = ?", id).executeSingle();
     }
 }

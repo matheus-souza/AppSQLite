@@ -1,6 +1,7 @@
 package br.com.matheush.appsqlite.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import br.com.matheush.appsqlite.model.Pessoa;
@@ -12,8 +13,9 @@ import br.com.matheush.appsqlite.model.Pessoa;
 public interface IDao<T> {
     public void salva(T objeto);
     public void deleta(int id);
+    public void detetaTodos();
     public void altera(T objeto);
-    public ArrayList<T> getObejetos();
+    public List<T> getObejetos();
     public T getObejeto(int id);
 
 
