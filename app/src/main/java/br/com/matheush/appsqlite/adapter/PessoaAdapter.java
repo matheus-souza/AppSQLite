@@ -21,14 +21,14 @@ public class PessoaAdapter extends RecyclerView.Adapter<PessoaAdapter.PessoaView
     private ArrayList<Pessoa> pessoaArrayList;
     private Context context;
 
-    private PessoaOnClickListener pessoaOnClickListener;
-    private PessoaOnLongClickListener pessoaOnLongClickListener;
+    private OnItemClickListener onItemClicked;
+    private OnItemLongClickListener onItemLongClicked;
 
-    public PessoaAdapter(ArrayList<Pessoa> pessoaArrayList, Context context, PessoaOnClickListener pessoaOnClickListener, PessoaOnLongClickListener pessoaOnLongClickListener) {
+    public PessoaAdapter(ArrayList<Pessoa> pessoaArrayList, Context context, OnItemClickListener onItemClicked, OnItemLongClickListener onItemLongClicked) {
         this.pessoaArrayList = pessoaArrayList;
         this.context = context;
-        this.pessoaOnClickListener = pessoaOnClickListener;
-        this.pessoaOnLongClickListener = pessoaOnLongClickListener;
+        this.onItemClicked = onItemClicked;
+        this.onItemLongClicked = onItemLongClicked;
     }
 
     @Override
@@ -55,33 +55,33 @@ public class PessoaAdapter extends RecyclerView.Adapter<PessoaAdapter.PessoaView
         holder.tvEmail.setText(p.getEmail());
 
         //Click
-        if (pessoaOnClickListener != null) {
+        if (onItemClicked != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    pessoaOnClickListener.onClickPessoa(holder.itemView, position);
+                    onItemClicked.onItemClicked(holder.itemView, position);
                 }
             });
         }
 
         //Long press
-        if (pessoaOnLongClickListener != null) {
+        if (onItemLongClicked != null) {
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    pessoaOnLongClickListener.onLongClickedPessoa(position);
+                    onItemLongClicked.onItemLongClicked(position);
                     return true;
                 }
             });
         }
     }
 
-    public interface PessoaOnClickListener {
-        public void onClickPessoa(View view, int idx);
+    public interface OnItemClickListener {
+        public void onItemClicked(View view, int idx);
     }
 
-    public interface PessoaOnLongClickListener {
-        public boolean onLongClickedPessoa(int position);
+    public interface OnItemLongClickListener {
+        public boolean onItemLongClicked(int position);
     }
 
     public class PessoaViewHolder extends RecyclerView.ViewHolder {
