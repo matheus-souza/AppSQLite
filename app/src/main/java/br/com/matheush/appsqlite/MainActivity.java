@@ -1,8 +1,8 @@
 package br.com.matheush.appsqlite;
 
-import android.app.Application;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,21 +20,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.os.Build.VERSION_CODES.M;
-import static android.provider.Contacts.SettingsColumns.KEY;
 
-public class MainActivity extends AppCompatActivity implements Validator.ValidationListener{
+public class MainActivity extends AppCompatActivity implements Validator.ValidationListener {
     @NotEmpty(message = MyApplication.MSG_VAZIO)
     @BindView(R.id.etNome)
-    private EditText etNome;
+    EditText etNome;
     @NotEmpty(message = MyApplication.MSG_VAZIO)
     @BindView(R.id.etFone)
-    private EditText etFone;
+    EditText etFone;
     @Email(message = MyApplication.MSG_INVALIDO)
     @BindView(R.id.etEmail)
-    private EditText etEmail;
-    @BindView(R.id.btEnviar)
-    private Button btEnviar;
+    EditText etEmail;
+    @BindView(R.id.btSalvar)
+    Button btSalvar;
+    @BindView(R.id.rvLista)
+    RecyclerView rvLista;
 
     private Validator validator;
 
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
         validator = new Validator(this);
         validator.setValidationListener(this);
+
 
         /*try {
             SQLiteDatabase bancoDados = openOrCreateDatabase("MeuApp", MODE_PRIVATE, null);
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         }*/
     }
 
-    @OnClick(R.id.btEnviar)
+    @OnClick(R.id.btSalvar)
     public void onClick() {
         validator.validate();
     }
