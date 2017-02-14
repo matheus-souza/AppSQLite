@@ -1,7 +1,13 @@
 package br.com.matheush.appsqlite;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -16,10 +22,15 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.util.List;
 
+import br.com.matheush.appsqlite.adapter.PessoaAdapter;
+import br.com.matheush.appsqlite.dao.PessoaDao;
+import br.com.matheush.appsqlite.model.Pessoa;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.os.Build.VERSION_CODES.M;
+import static com.activeandroid.Cache.getContext;
 
 public class MainActivity extends AppCompatActivity implements Validator.ValidationListener {
     @NotEmpty(message = MyApplication.MSG_VAZIO)
@@ -37,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     RecyclerView rvLista;
 
     private Validator validator;
+    private List<Pessoa> pessoas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,37 +59,51 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         validator = new Validator(this);
         validator.setValidationListener(this);
 
+        rvLista.setLayoutManager(new LinearLayoutManager(this));
+        rvLista.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        rvLista.setItemAnimator(new DefaultItemAnimator());
+        rvLista.setHasFixedSize(true);
 
-        /*try {
-            SQLiteDatabase bancoDados = openOrCreateDatabase("MeuApp", MODE_PRIVATE, null);
+        atualizaDadosLista();
+    }
 
-            bancoDados.execSQL("CREATE TABLE IF NOT EXISTS cadastropessoas (nome VARCHAR, telefone INT(4), email VARCHAR)");
+    public void atualizaDadosLista() {
+        PessoaDao pessoaDao = new PessoaDao();
 
-            //bancoDados.execSQL("DROP TABLE IF EXISTS cadastropessoas");
+        pessoas = pessoaDao.getObejetos();
 
-            //bancoDados.execSQL("INSERT INTO cadastropessoas (nome, telefone, email) values ('Nome1', 999, 'mh.matheussouza@gmail.com')");
-            //bancoDados.execSQL("INSERT INTO cadastropessoas (nome, telefone, email) values ('Nome2', 999, 'mh.matheussouza@gmail.com')");
-            //bancoDados.execSQL("INSERT INTO cadastropessoas (nome, telefone, email) values ('Nome3', 999, 'mh.matheussouza@gmail.com')");
+        PessoaAdapter pessoaAdapter = new PessoaAdapter(MainActivity.this, pessoas, onItemClickListener(), onItemLongClickListener());
+        rvLista.setAdapter(pessoaAdapter);
+    }
 
-            Cursor cursor = bancoDados.rawQuery("SELECT nome,telefone,email FROM cadastropessoas", null);
+    protected PessoaAdapter.OnItemClickListener onItemClickListener() {
+        return new PessoaAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(View view, int position) {
+                Log.d("LogX", "Clicou no item " + position);
+            }
+        };
+    }
 
-            cursor.moveToFirst();
+    protected PessoaAdapter.OnItemLongClickListener onItemLongClickListener() {
+        return new PessoaAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(final int position) {
+                Log.d("LogX", "Clicou longo no item " + position);
 
-            int indiceNome = 0, indiceTelefone = 0, indiceEmail = 0;
-
-            do {
-                if (cursor.isFirst()) {
-                    indiceNome = cursor.getColumnIndex("nome");
-                    indiceTelefone = cursor.getColumnIndex("telefone");
-                    indiceEmail = cursor.getColumnIndex("email");
-                }
-                Log.i("LogNome", cursor.getString(indiceNome));
-                Log.i("LogTelefone", String.valueOf(cursor.getInt(indiceTelefone)));
-                Log.i("LogEmail", cursor.getString(indiceEmail));
-            } while (cursor.moveToNext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Aviso!")
+                        .setMessage("Deseja apagar a pessoa " + pessoas.get(position).getNome() + "?")
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                new PessoaDao().deleta(pessoas.get(position));
+                                atualizaDadosLista();
+                            }
+                        }).setNegativeButton("Não", null).show();
+                return true;
+            }
+        };
     }
 
     @OnClick(R.id.btSalvar)
@@ -87,7 +113,15 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-        Log.d("LogX", "Passou no teste");
+        Log.d("LogX", "Passou na validação");
+        Pessoa pessoa = new Pessoa();
+        pessoa.setNome(etNome.getText().toString());
+        pessoa.setEmail(etEmail.getText().toString());
+        pessoa.setNumeroCelular(Long.parseLong(etFone.getText().toString()));
+
+        new PessoaDao().salva(pessoa);
+
+        atualizaDadosLista();
     }
 
     @Override

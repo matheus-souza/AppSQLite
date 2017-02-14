@@ -14,8 +14,6 @@ import static android.R.attr.x;
 
 @Table(name = "Pessoa", id = "id")
 public class Pessoa extends Model {
-    @Column(name = "pessoa_id", unique = true, index = true, onUniqueConflicts = Column.ConflictAction.REPLACE)
-    private long idPessoa;
     @Column(name = "pessoa_nome")
     private String nome;
     @Column(name = "pessoa_numero_celular")
@@ -27,18 +25,12 @@ public class Pessoa extends Model {
     }
 
     public Pessoa(String nome, long numeroCelular, String email) {
+        super();
         this.nome = nome;
         this.numeroCelular = numeroCelular;
         this.email = email;
     }
 
-    public long getIdPessoa() {
-        return idPessoa;
-    }
-
-    public void setIdPessoa(long idPessoa) {
-        this.idPessoa = idPessoa;
-    }
 
     public String getNome() {
         return nome;
@@ -72,7 +64,6 @@ public class Pessoa extends Model {
 
         Pessoa pessoa = (Pessoa) o;
 
-        if (idPessoa != pessoa.idPessoa) return false;
         if (numeroCelular != pessoa.numeroCelular) return false;
         if (nome != null ? !nome.equals(pessoa.nome) : pessoa.nome != null) return false;
         return email != null ? email.equals(pessoa.email) : pessoa.email == null;
@@ -82,7 +73,6 @@ public class Pessoa extends Model {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (int) (idPessoa ^ (idPessoa >>> 32));
         result = 31 * result + (nome != null ? nome.hashCode() : 0);
         result = 31 * result + (int) (numeroCelular ^ (numeroCelular >>> 32));
         result = 31 * result + (email != null ? email.hashCode() : 0);
@@ -92,8 +82,7 @@ public class Pessoa extends Model {
     @Override
     public String toString() {
         return "Pessoa{" +
-                "idPessoa=" + idPessoa +
-                ", nome='" + nome + '\'' +
+                "nome='" + nome + '\'' +
                 ", numeroCelular=" + numeroCelular +
                 ", email='" + email + '\'' +
                 '}';

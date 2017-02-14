@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.matheush.appsqlite.R;
 import br.com.matheush.appsqlite.model.Pessoa;
@@ -18,22 +19,21 @@ import br.com.matheush.appsqlite.model.Pessoa;
  */
 
 public class PessoaAdapter extends RecyclerView.Adapter<PessoaAdapter.PessoaViewHolder> {
-    private ArrayList<Pessoa> pessoaArrayList;
     private Context context;
-
+    private List<Pessoa> pessoaList;
     private OnItemClickListener onItemClicked;
     private OnItemLongClickListener onItemLongClicked;
 
-    public PessoaAdapter(ArrayList<Pessoa> pessoaArrayList, Context context, OnItemClickListener onItemClicked, OnItemLongClickListener onItemLongClicked) {
-        this.pessoaArrayList = pessoaArrayList;
+    public PessoaAdapter(Context context, List<Pessoa> pessoaList, OnItemClickListener onItemClicked, OnItemLongClickListener onItemLongClicked) {
         this.context = context;
+        this.pessoaList = pessoaList;
         this.onItemClicked = onItemClicked;
         this.onItemLongClicked = onItemLongClicked;
     }
 
     @Override
     public int getItemCount() {
-        return this.pessoaArrayList != null ? this.pessoaArrayList.size() : 0;
+        return this.pessoaList != null ? this.pessoaList.size() : 0;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PessoaAdapter extends RecyclerView.Adapter<PessoaAdapter.PessoaView
     @Override
     public void onBindViewHolder(final PessoaViewHolder holder, final int position) {
         //Atualiza a view
-        Pessoa p = pessoaArrayList.get(position);
+        Pessoa p = pessoaList.get(position);
         Log.d("LogAdapter", "Pessoa no adapter: " + p.toString());
 
         holder.tvNome.setText(p.getNome());
@@ -77,7 +77,7 @@ public class PessoaAdapter extends RecyclerView.Adapter<PessoaAdapter.PessoaView
     }
 
     public interface OnItemClickListener {
-        public void onItemClicked(View view, int idx);
+        public void onItemClicked(View view, int position);
     }
 
     public interface OnItemLongClickListener {
@@ -93,7 +93,6 @@ public class PessoaAdapter extends RecyclerView.Adapter<PessoaAdapter.PessoaView
 
             tvNome = (TextView) view.findViewById(R.id.card_tv_nome);
             tvEmail = (TextView) view.findViewById(R.id.card_tv_email);
-
         }
     }
 }

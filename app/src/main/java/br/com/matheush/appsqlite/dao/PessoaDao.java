@@ -15,14 +15,12 @@ import br.com.matheush.appsqlite.model.Pessoa;
 public class PessoaDao implements IDao<Pessoa> {
     @Override
     public void salva(Pessoa pessoa) {
-        new Pessoa(pessoa.getNome(),
-                pessoa.getNumeroCelular(),
-                pessoa.getEmail()).save();
+        pessoa.save();
     }
 
     @Override
-    public void deleta(int id) {
-        Pessoa.delete(Pessoa.class, id);
+    public void deleta(Pessoa pessoa) {
+        pessoa.delete();
     }
 
     @Override

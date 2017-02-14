@@ -12,7 +12,7 @@ import br.com.matheush.appsqlite.model.Pessoa;
 
 public interface IDao<T> {
     public void salva(T objeto);
-    public void deleta(int id);
+    public void deleta(Pessoa pessoa);
     public void detetaTodos();
     public void altera(T objeto);
     public List<T> getObejetos();
