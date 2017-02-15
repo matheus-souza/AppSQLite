@@ -33,8 +33,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.DadosActivity"
-            android:label="@string/title_activity_dados"
+            android:name=".activity.DetalheActivity"
+            android:label="@string/title_activity_detalhe"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.EditaActivity"
+            android:label="@string/title_activity_edita"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

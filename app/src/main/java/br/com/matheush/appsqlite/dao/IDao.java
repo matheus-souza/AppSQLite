@@ -16,7 +16,7 @@ public interface IDao<T> {
     public void detetaTodos();
     public void altera(T objeto);
     public List<T> getObejetos();
-    public T getObejeto(int id);
+    public T getObejeto(long id);
 
 
 

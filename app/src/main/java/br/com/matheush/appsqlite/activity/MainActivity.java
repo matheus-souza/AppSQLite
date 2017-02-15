@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
                 Log.d("LogX", "ID da pessoa: " + index);
 
-                Intent intent = new Intent(MainActivity.this, DadosActivity.class);
+                Intent intent = new Intent(MainActivity.this, DetalheActivity.class);
                 intent.putExtra("index", index);
                 startActivity(intent);
             }

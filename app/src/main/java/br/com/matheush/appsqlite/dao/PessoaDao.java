@@ -39,7 +39,7 @@ public class PessoaDao implements IDao<Pessoa> {
     }
 
     @Override
-    public Pessoa getObejeto(int id) {
+    public Pessoa getObejeto(long id) {
         return new Select().from(Pessoa.class).where("id = ?", id).executeSingle();
     }
 }
