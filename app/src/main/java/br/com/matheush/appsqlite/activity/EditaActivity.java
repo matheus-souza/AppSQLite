@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import br.com.matheush.appsqlite.model.Pessoa;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static br.com.matheush.appsqlite.R.id.etFone;
+
 public class EditaActivity extends AppCompatActivity implements Validator.ValidationListener{
 
     @NotEmpty(message = MyApplication.MSG_VAZIO)
@@ -38,6 +41,7 @@ public class EditaActivity extends AppCompatActivity implements Validator.Valida
     EditText etEmail;
 
     private Validator validator;
+    private Pessoa pessoa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class EditaActivity extends AppCompatActivity implements Validator.Valida
         Intent intent = getIntent();
 
         long index = intent.getExtras().getLong("index");
-        Pessoa pessoa = new PessoaDao().getObejeto(index);
+        pessoa = new PessoaDao().getObejeto(index);
 
         etNome.setText(pessoa.getNome());
         etNumCel.setText(String.valueOf(pessoa.getNumeroCelular()));
@@ -84,7 +88,12 @@ public class EditaActivity extends AppCompatActivity implements Validator.Valida
 
     @Override
     public void onValidationSucceeded() {
-        //ATUALIZA DADOS DA PESSOA NO BANCO
+        pessoa.setNome(etNome.getText().toString());
+        pessoa.setEmail(etEmail.getText().toString());
+        pessoa.setNumeroCelular(Long.parseLong(etNumCel.getText().toString()));
+
+        new PessoaDao().salva(pessoa);
+        Toast.makeText(getApplicationContext(), "Pessoa " + pessoa.getNome() + " salva!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

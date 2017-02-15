@@ -29,11 +29,6 @@ public class PessoaDao implements IDao<Pessoa> {
     }
 
     @Override
-    public void altera(Pessoa pessoa) {
-
-    }
-
-    @Override
     public List<Pessoa> getObejetos() {
         return new Select().from(Pessoa.class).orderBy("id ASC").execute();
     }

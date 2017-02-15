@@ -76,6 +76,13 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         atualizaDadosLista();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        atualizaDadosLista();
+    }
+
     public void atualizaDadosLista() {
         PessoaDao pessoaDao = new PessoaDao();
 
@@ -89,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         etNome.setText("");
         etFone.setText("");
         etEmail.setText("");
+        etNome.requestFocus();
     }
 
     protected PessoaAdapter.OnItemClickListener onItemClickListener() {

@@ -38,6 +38,11 @@ public class DetalheActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         index = intent.getLongExtra("index", 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         Pessoa pessoa = new PessoaDao().getObejeto(index);
 
